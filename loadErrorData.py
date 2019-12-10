@@ -1,7 +1,11 @@
+# Functions on this page take the error data from ErrorData and load it into the SQLite table 'errors'
+
 import sqlite3
 from sqlite3 import Error
 from ErrorData import errorDell, errorVMware, errorLenovo, errorAPC, errorHPE, errorHPI
 
+
+# Creates Connection to the SQLite database
 def create_connection():
     conn = None
     try:
@@ -11,6 +15,9 @@ def create_connection():
 
     return conn
 
+
+# Creates the table 'errors' if it does not already exists
+# Clears all entries so a refresh of error information is done
 def prep_table(conn):
     create = ''' CREATE TABLE IF NOT EXISTS errors (
                     vendor TEXT,
@@ -23,6 +30,8 @@ def prep_table(conn):
     cur.execute(delete)
     conn.commit()
 
+
+# Inserts error information into the 'errors' table
 def update_table(vendor, errors, occurrences, conn):
     cur = conn.cursor()
     insert = ''' INSERT INTO errors(vendor,error,occurrences)
@@ -34,6 +43,9 @@ def update_table(vendor, errors, occurrences, conn):
         conn.commit()
         x += 1
 
+
+# This is the main function
+# Loads error data from ErrorData and uploads it to 'errors' table
 def load_ErrorData():
     vendors = ['Dell', 'VMware', 'Lenovo', 'APC', 'HPE', 'HPI']
     conn = create_connection()

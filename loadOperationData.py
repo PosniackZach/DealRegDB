@@ -1,8 +1,14 @@
+# Functions on this page take the information from AuditData and OperationInfo to load into SQLite database
+# Table in SQLite database is called 'audit'
+
+
 import sqlite3
 from sqlite3 import Error
 from AuditData import auditDell, auditVMware, auditLenovo, auditAPC, auditHPE, auditHPI
 from OperationInfo import occurrenceTime, isRunning, currentDate
 
+
+# Creates Connection to the SQLite database
 def create_connection():
     conn = None
     try:
@@ -12,6 +18,9 @@ def create_connection():
 
     return conn
 
+
+# Updated the 'audit' table with audit data information
+# Function will also create the 'audit' table if it doesn't already exist
 def update_tablevalues(content, conn):
     cur = conn.cursor()
     cur.execute('''SELECT count(name) FROM sqlite_master WHERE type='table' AND name='audit' ''')
@@ -34,6 +43,11 @@ def update_tablevalues(content, conn):
                  WHERE vendor = ? '''
     cur.execute(sql, content)
     conn.commit()
+
+
+# This is the main function on this page
+# The function will grab data from AuditData, process the information through functions in OperationInfo, and post
+# the result in the 'audit' table
 def load_OperationData():
     vendors = ['Dell', 'VMware', 'Lenovo', 'APC', 'HPE', 'HPI']
     for x in vendors:

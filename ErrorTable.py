@@ -1,7 +1,12 @@
+# Functions on this page create a table of errors in SQlite database
+# This is to replace the 'LoadErrorData' functions for a better alternative on the website side
+
+
 import sqlite3
 from sqlite3 import Error
 
 
+# Creates Connection to the SQLite database
 def create_connection():
     conn = None
     try:
@@ -11,6 +16,9 @@ def create_connection():
 
     return conn
 
+
+# Creates the table 'errorTable' if it does not already exists
+# Clears all entries so a refresh of error information is done
 def prep_table(conn):
     create = ''' CREATE TABLE IF NOT EXISTS errorTable (
                     vendor TEXT,
@@ -23,6 +31,8 @@ def prep_table(conn):
     cur.execute(delete)
     conn.commit()
 
+
+# Inserts error information into the 'errorTable'
 def update_table(vendor, error, request, conn):
     cur = conn.cursor()
     insert = ''' INSERT INTO errorTable(vendor,error,id)
@@ -31,6 +41,9 @@ def update_table(vendor, error, request, conn):
     cur.execute(insert, var)
     conn.commit()
 
+
+# This is the main function
+# Loads error data from error logs and uploads it to 'errorTable'
 def error_table():
     conn = create_connection()
     prep_table(conn)

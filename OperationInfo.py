@@ -1,12 +1,18 @@
+# Functions on this page process information to tell if the deal registration bots are currently running
+
+
 from datetime import date
 import datetime
 
+# Get current date in format seen in event logs
 today = date.today()
 currentDay = today.day
 currentMonth = today.month
 currentYear = today.year
 currentDate = str(currentMonth) + '/' + str(currentDay) + "/" + str(currentYear)
 
+
+# Time from logs is in UTC, this function changes it to Arizona time to match the current time
 def occurrenceTime(occurrence):
     lastOccurrence = occurrence.split(':')
     if lastOccurrence[2].find('P') != -1:
@@ -61,6 +67,9 @@ def occurrenceTime(occurrence):
     lastOccurrenceMinute = lastOccurrence[1]
     return "{}:{} {}".format(lastOccurrenceHour, lastOccurrenceMinute, lastOccurrenceCycle)
 
+
+# This function determines if the bot 'is running', meaning that it has been deployed successfully
+# within the last 20 minutes
 def isRunning(time):
     ref = time
     time = time[:-2]

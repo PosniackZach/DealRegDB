@@ -1,3 +1,7 @@
+# This is the main page of this project
+# This page prompts the user for run and refresh times and runs the functions that update the SQLite tables
+
+
 import time
 from loadOperationData import load_OperationData
 from loadErrorData import load_ErrorData
@@ -13,7 +17,9 @@ while runTotal > 0:
         load_OperationData()
         load_ErrorData()
         error_table()
-        print('Load Success')
     except:
         print('Load Fail')
     time.sleep(delay)
+    runTotal -= 1
+    if runTotal == 1:
+        print('This is the final update')
